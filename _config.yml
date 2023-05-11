@@ -1,13 +1,13 @@
 # SITE CONFIGURATION
-title: Sleek # your site title
-author: GitHub User # You :P
+title: Power estimator # your site title
+author: Jerry Jin, Yujie Lu # You :P
 description: > # Meta description of Homepage
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-baseurl: "/sleek" # the subpath of your site, e.g. /blog
-url: "https://janczizikow.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
+  This is the final project of ECE5760. We built a power estimator using an FPGA and a current sensor board. 
+  Find out more by reading!
 
+baseurl: "ece5760_final_webpage" # the subpath of your site, e.g. /blog
+url: https://404codercn.github.io/ # the base hostname & protocol for your site, e.g. http://example.com
+remote_theme: janczizikow/sleek
 # SEO PLUGIN
 social:
   name: Your Name
@@ -26,7 +26,7 @@ navigation: # Navigation links
   - {name: 'Contact', link: '/contact'}
 
 tagline: >
-  Modern Jekyll theme focused on speed performance &amp; SEO best practices
+  Power estimator based on FPGA
 
 hero_img: posts/sleek_lg.jpg # Main background image: use the path from /assets/img/ => This will output /assets/img/posts/sleek_lg.jpg
 
