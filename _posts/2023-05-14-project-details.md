@@ -1,7 +1,7 @@
 ---
 layout: post
 title: FPGA based power estimator
-featured-img: post_background.jpg
+featured-img: assets/img/posts/post_background.jpg
 mathjax: true
 ---
 
@@ -11,7 +11,7 @@ Power consumption is a crtical consideration of a lot of the technologis today. 
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/intro_pic.jpg" width="700" height="250">
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/intro_pic.jpg" width="600" height="150">
 <figcaption align="center"> Figure 1: Display of graphs on VGA </figcaption>
 </center>
 </div>
