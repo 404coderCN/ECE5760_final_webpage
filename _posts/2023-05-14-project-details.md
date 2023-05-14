@@ -1,7 +1,7 @@
 ---
 layout: post
 title: FPGA based power estimator
-featured-img: assets/img/posts/post_background.jpg
+featured-img: post_background
 mathjax: true
 ---
 
