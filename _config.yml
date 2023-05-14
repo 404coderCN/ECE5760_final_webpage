@@ -24,7 +24,7 @@ navigation: # Navigation links
 tagline: >
   An ECE5760 final project
 
-hero_img: assets/img/posts/main_background.jpg # Main background image: use the path from /assets/img/ => This will output /assets/img/posts/sleek_lg.jpg
+hero_img: posts/main_background.jpg # Main background image: use the path from /assets/img/ => This will output /assets/img/posts/sleek_lg.jpg
 
 email: jerrykim2001216@gmail.com # email for form submission
 
