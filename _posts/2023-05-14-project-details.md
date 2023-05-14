@@ -27,6 +27,20 @@ mathjax: true
 </center>
 </div>
 
+
+&nbsp;&nbsp;&nbsp;&nbsp;Following the I2C protocol explained above, we developed an 11-state FSM in SystemVerilog which can be seen in Figure 3. In STATE_DATA_RECEIVED_UPPER and STATE_DATA_RECEIVED_LOWER, the master receives data from the slave and puts it in a shift register of 12-bits. At each negative clock edge in these two states, the respective counter will increment by 1 and state transition happens when the counter reaches 7. Because the SDA line can be controlled by both the master and the slave, we wrote a tri-state buffer to decide which device gets control of the line. The tri-state buffer comes with an enable signal that is HIGH when the master device acts as an input in the transaction, and SDA should become high impedance on the master side when this enable signal is asserted. Otherwise, SDA gets the output from master. The SCL clock line follows the input 200K clock signal whenever we're not sending start/stop condition, not waiting, or not in idle. A data valid signal is pulled HIGH when the master acknowledges the lower bits of data or when a NAK is asserted by the master. This signal will later be used to control our integrator in calculating accumulative energy.
+
+&nbsp;&nbsp;&nbsp;&nbsp;After figuring out the state machine, we tested our implementation by writing a testbench that feeds in control signal, clock, and data, and verified the output waveforms in ModelSim. As sow in Figure 4, the master is able to send out the correct address bits, generate ACKs when appropriate, read the input data and pull the data valid signal high when the 12-bit transaction completes.
+
+<div>
+<center>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/modelsim_waveform.jpg" width="400" height="70">
+<figcaption align="center"> Figure 4: Modelsim waveform of testbench for I2C master implementation </figcaption>
+</center>
+</div>
+
+
+
 1. Just download or fork and clone the source from [github.com/janczizikow/sleek](https://github.com/janczizikow/sleek/).
 2. Make sure your local machine has ruby and node
 3. Edit site settings in  `_config.yml` file according to your project.
