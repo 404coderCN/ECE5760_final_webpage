@@ -4,10 +4,9 @@ title: About
 permalink: /about/
 ---
 
-Sleek is a modern Jekyll theme focused on speed performance & SEO best practices. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/) or simply read the guide on how to [get started](/getting-started)
+This is the webpage of our ECE5760 final project. We built a power estimator that calculates the power consumption of an FPGA. We established I2C connection between the FPGA and a current sensor by following the protocol specified by the [ACS711 sensor]((https://download.mikroe.com/documents/datasheets/ACS711-Datasheet.pdf)). Since the voltage across the power adapter is always at 12V, we were able to calculate the unit energy using V x I x dt. Both dynamic and average power were provided in our design. Through testing, we were able to observe significant difference in power consumption between using ethernet cable and using serial to communicate with the FPGA. Read about our project to find out more details! 
 
-You can find the source code for the Jekyll new theme at:
-[sleek](https://github.com/janczizikow/sleek)
+You can our code on GitHub at:
+[GitHub](https://github.com/404coderCN/ECE5760_power_estimator)
 
-You can find the source code for Jekyll at
-[jekyll](https://github.com/jekyll/jekyll)
+

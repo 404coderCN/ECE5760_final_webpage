@@ -19,14 +19,14 @@ social:
 navigation: # Navigation links
   - {name: 'Home', link: '/'}
   - {name: 'About', link: '/about'}
-  - {name: 'Project', link: '/contact'}
+  - {name: 'Contact', link: '/contact'}
 
 tagline: >
   An ECE5760 final project
 
-hero_img: posts/sleek_lg.jpg # Main background image: use the path from /assets/img/ => This will output /assets/img/posts/sleek_lg.jpg
+hero_img: posts/main_background.jpg # Main background image: use the path from /assets/img/ => This will output /assets/img/posts/sleek_lg.jpg
 
-email: your-email@domain.com # email for form submission
+email: jerrykim2001216@gmail.com # email for form submission
 
 github_username:  404coderCN # replace with your_github_username or comment to remove link from footer
 
