@@ -116,3 +116,16 @@ Your browser does not support the video tag.
 
 ## Future development
 &nbsp;&nbsp;&nbsp;&nbsp;Unfortunately, with the limitation of time, we were not able to carry out more investigations, so we still have plenty of room for further testing and improvement. We can, for example, experiment with adding and removing the VGA and audio subsystem and observe how that affects power consumption. It would definitely be meaningful if we could come up with a way to integrate the power estimator with other labs so we can better understand their performance.
+
+## Appendix A
+The group approves this report for inclusion on the course website.
+The group approves the video for inclusion on the course youtube channel.
+
+## References
+[MCP3221 ADC Datasheet](https://www.digikey.com/htmldatasheets/production/48559/0/0/1/mcp3221.html?utm_adgroup=Integrated%20Circuits&utm_source=google&utm_medium=cpc&utm_campaign=Dynamic%20Search_EN_Product&utm_term=&utm_content=Integrated%20Circuits&gclid=CjwKCAjwjYKjBhB5EiwAiFdSfp9ML477NVziVD5azNRU4RDcGAhePigK16BnE5FcO95hGj4eKhzXJRoCMEwQAvD_BwE)
+
+[DE1-SoC User Manual](https://people.ece.cornell.edu/land/courses/ece5760/DE1_SOC/DE1-SoC_User_manualv.1.2.2_revE.pdf)
+
+[MIKROE-2987 Schematic](https://download.mikroe.com/documents/add-on-boards/click/hall-current-2/hall-current-2-click-schematic-v100.pdf)
+
+[ACS711 Current Sensor Datasheet](https://download.mikroe.com/documents/datasheets/ACS711-Datasheet.pdf)
