@@ -16,7 +16,7 @@ The overall design of our power estimator is shown in Figure 1.
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/lab4_overall_design" width="270" height="70">
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/lab4_overall_design.jpg" width="270" height="70">
 <figcaption align="center"> Figure 1: Overall design of power estimator </figcaption>
 </center>
 </div>
