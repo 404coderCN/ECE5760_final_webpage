@@ -9,13 +9,6 @@ mathjax: true
 
 &nbsp;&nbsp;&nbsp;&nbsp;Power consumption is a critical consideration of a lot of technologies today. Phone producers, for example, always talk about their improvement in power management and how it makes their battery last longer. The balance between functionality and power is an interesting topic investigated by many. When we are doing labs, however, we rarely think about how much power we are consuming, because we are never limited by it. When we synthesized the giant drum in lab 3 for this class, we exhausted all DSP blocks on the FPGA, and we used a lot of M10K memory. This kind of extensive use of hardware is likely to result in high power consumption, and we are curious to find out what are some of the factors that could impact the power consumption of an FPGA. With this goal in mind, we built a circuit that measures the current flowing through the power cable, and implemented an integrator in the FPGA that continuously increments the energy consumed. Using this information, we drew three graphs displaying current, dynamic energy, and average energy on a VGA display.
 
-<div>
-<center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/intro_pic.jpg" width="500" height="150">
-<figcaption align="center"> Figure 1: Display of graphs on VGA </figcaption>
-</center>
-</div>
-
 ## Design & testing methods
 
 ### Hardware design
@@ -25,19 +18,19 @@ mathjax: true
 <div>
 <center>
 <img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/i2c_protocol.png" width="400" height="70">
-<figcaption align="center"> Figure 2: I2C protocol specified by MCP3221 </figcaption>
+<figcaption align="center"> Figure 1: I2C protocol specified by MCP3221 </figcaption>
 </center>
 </div>
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;Following the I2C protocol explained above, we developed an 11-state FSM in SystemVerilog which can be seen in Figure 3. In STATE_DATA_RECEIVED_UPPER and STATE_DATA_RECEIVED_LOWER, the master receives data from the slave and puts it in a shift register of 12-bits. At each negative clock edge in these two states, the respective counter will increment by 1 and state transition happens when the counter reaches 7. Because the SDA line can be controlled by both the master and the slave, we wrote a tri-state buffer to decide which device gets control of the line. The tri-state buffer comes with an enable signal that is HIGH when the master device acts as an input in the transaction, and SDA should become high impedance on the master side when this enable signal is asserted. Otherwise, SDA gets the output from master. The SCL clock line follows the input 200K clock signal whenever we're not sending start/stop condition, not waiting, or not in idle. A data valid signal is pulled HIGH when the master acknowledges the lower bits of data or when a NAK is asserted by the master. This signal will later be used to control our integrator in calculating accumulative energy.
+&nbsp;&nbsp;&nbsp;&nbsp;Following the I2C protocol explained above, we developed an 11-state FSM in SystemVerilog which can be seen in Figure 2. In STATE_DATA_RECEIVED_UPPER and STATE_DATA_RECEIVED_LOWER, the master receives data from the slave and puts it in a shift register of 12-bits. At each negative clock edge in these two states, the respective counter will increment by 1 and state transition happens when the counter reaches 7. Because the SDA line can be controlled by both the master and the slave, we wrote a tri-state buffer to decide which device gets control of the line. The tri-state buffer comes with an enable signal that is HIGH when the master device acts as an input in the transaction, and SDA should become high impedance on the master side when this enable signal is asserted. Otherwise, SDA gets the output from master. The SCL clock line follows the input 200K clock signal whenever we're not sending start/stop condition, not waiting, or not in idle. A data valid signal is pulled HIGH when the master acknowledges the lower bits of data or when a NAK is asserted by the master. This signal will later be used to control our integrator in calculating accumulative energy.
 
 TO ADD:
 // FSM diagram
 // conversion of current data
 // 5.22 fixed point representation
 
-&nbsp;&nbsp;&nbsp;&nbsp; The MCP3221 I2C interface also specified that the maximum clock speed it can achieve is 400kHz. This means the 50MHz FPGA clock will be too fast to run, so we added a clock divider to step it down to 200kHz. With the I2C interface figured out, we went on to implement an integrator that takes the current output, computes the unit energy consumption and increments continuously by adding on the previous energy value. We added a stop signal to allow pausing of integration. Whenever stop is not asserted and data from the I2C interface is valid, we calculate the new unit energy by computing $V * I * dt$, and add it to the total energy consumed. The value of dt was determined by counting the number of pulses between two consecutive data valid signals using SignalTap. We counted 18 pulses, which match with the protocol (16 pulses for transmitting data and 2 pulses for ACK). This means our unit energy at every new sample of current is $V * I * {18} \over {200000}$. We also increment a counter every time the current becomes valid, and we will be able to determine the elaspe time since the FPGA start running by computing $(cycle count - 1)*18 \over 200000$. Here we disregard the time for the first transaction, i.e. we are not counting the first 27 cycles, because it includes time to transmit the address bits which is not representative of the transactions in between. Since our clock runs at a high frequency, these 27 cycles should be negligible, and we preserve enough precison for our time estimation. 
+&nbsp;&nbsp;&nbsp;&nbsp; The MCP3221 I2C interface also specified that the maximum clock speed it can achieve is 400kHz. This means the 50MHz FPGA clock will be too fast to run, so we added a clock divider to step it down to 200kHz. With the I2C interface figured out, we went on to implement an integrator that takes the current output, computes the unit energy consumption, and increments continuously by adding on the previous energy value. We added a stop signal to allow pausing of integration. Whenever stop is not asserted and data from the I2C interface is valid, we calculate the new unit energy by computing $V * I * dt$ and add it to the total energy consumed. The value of dt was determined by counting the number of pulses between two consecutive data valid signals using SignalTap. We counted 18 pulses, which matched the protocol (16 pulses for transmitting data and 2 pulses for ACK). This means our unit energy at every new sample of current is $V * I * {18} \over {200000}$. We also increment a counter every time the current becomes valid, and we will be able to determine the elapsed time since the FPGA start running by computing $(cycle count - 1)*18 \over 200000$. Here we disregard the time for the first transaction, i.e., we are not counting the first 27 cycles, because it includes time to transmit the address bits which is not representative of the transactions in between. Since our clock runs at a high frequency, these 27 cycles should be negligible, and we preserve enough precision for our time estimation.
 
 
 TO ADD:
@@ -46,13 +39,49 @@ TO ADD:
 
 ### Testing strategy
 
-&nbsp;&nbsp;&nbsp;&nbsp;To ensure all modules in our design work as expected, we took on an incremental approach to testing. At the lowest level, we first tested our I2C state machine by writing a testbench that feeds in control signal, clock, and data, and verified the output waveforms in ModelSim. As sow in Figure 4, the master is able to send out the correct address bits, generate ACKs when appropriate, read the input data and pull the data valid signal high when a 12-bit transaction completes.
+&nbsp;&nbsp;&nbsp;&nbsp;To ensure all modules in our design work as expected, we took on a hierarchical approach to testing. At the lowest level, we first tested our I2C state machine by writing a testbench that feeds in control signal, clock, and data, and verified the output waveforms in ModelSim. As seen in Figure 3, the master is able to send out the correct address bits, generate ACKs when appropriate, read the input data and pull the data valid signal high when a 12-bit transaction completes.
 
 <div>
 <center>
 <img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/modelsim_waveform.jpg" width="400" height="70">
-<figcaption align="center"> Figure 4: Modelsim waveform of testbench for I2C master implementation </figcaption>
+<figcaption align="center"> Figure 3: Modelsim waveform of testbench for I2C master implementation </figcaption>
 </center>
 </div>
 
+&nbsp;&nbsp;&nbsp;&nbsp;After the I2C interface proved to be working, we instantiated the modules in Quartus and verified signal feedback from the FPGA using SignalTap. SignalTap creates the real hardware circuit in the FPGA and gives us the actual output waveform generated by our circuit. Up until this time, we had been using a power supply to feed in current to the current sensor, so we know exactly what value to expect for the current output. We were also using buttons on the FPGA to control the reset, start and stop signal here, so we can easily trigger data capture for SignalTap. By comparing the current output on the power supply to the data output from SignalTap, we know whether our implementation is done correctly.
 
+&nbsp;&nbsp;&nbsp;&nbsp; At the end of the project, we moved from using power supply to directly measuring current drawn by the FPGA. We placed a 2.1mm female DC power jack on a breadboard and connect to it the FPGA power adapter. The power pin of the power jack is connected to the P+ pin of the mikroe-2987 board using a jumper wire, current will pass through the board and reach its P- pin, where we connected another jumper wire to the positive end of a male jack to open end power cable. The male power jack is inserted to the FPGA, whereas it negative end is connected back to the ground pin of the female power jack on the breadboard. This setup forms a series circuit where the current measured by the current sensor should be the same as the current drawn by the FPGA. Figure 4 shows how we set up this series circuit. We observe the graphs and different readings on screen to see if the data makes sense. We observed fairly constant reading of current and power in this setting, which is expected because the FPGA is always running the same program.
+
+<div>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/post_background.jpg" width="300" height="60">
+<figcaption align="left"> Figure 4: Setup of circuit to directly measure current drawn by FPGA </figcaption>
+</div>
+
+<div>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="70" height="250">
+<figcaption align="right"> Figure 5: A closer look at circuit around current sensor </figcaption>
+</div>
+
+// initially used buttons to control
+// first use power supply to feed in current, then move to using custom power cable
+// signaltap
+
+
+## Software design
+
+&nbsp;&nbsp;&nbsp;&nbsp;With all the needed hardware instantiated, we started to add communication with the HPS. Because our goal is to have a graphical representation of data on a VGA display, it is more convenient to work on the software side. We took an incremental approach in designing our software to guarantee correctness. We first allow the flow of data from FPGA to HPS by adding PIOs on the Qsys bus. Each PIO is given an offset from the lightweight AXI master, and we were able to access the data by looking at address: offset + lightweight AXI master address. Since the output from our integrator module is energy instead of power, we need to do some conversions. The dynamic power at every given instance equals instantaneous current * 12V, and the average power equals accumulated energy/total time spent. Before actually plotting these data, we want to make sure our data make sense, so we print the value of current, dynamic power, average power, cycle count, and time on our serial monitor whenever the data valid signal is pulled HIGH. In this process, we realized that we need to intentionally put our program to sleep for some time, because the HPS is running at a much faster rate than the FPGA, so one HIGH portion of the data valid signal would correspond to hundreds of cycles for the HPS, thus generate a lot more data points than needed. After confirming the correctness of our data, we need a proper way to display it. We decided to display three graphs on the VGA: current vs. time, dynamic power vs. time, and average power vs. time. We limit the time scale on screen to 3 seconds, meaning the graphs would be erased and redrawn using new data every 3 seconds. The y-axis scale is determined by the variable. For current, it is limited by the capability of our current sensor, which can handle up to 2A. For dynamic power and average power, the maximum is $I_{Max} * V_{Max} = 2 * 12 = 24 W$. So, from the bottom of the y-axis, every addition of pixel in the y direction represents a $24 \over 119$ W increase in power. We also created a text box to the right of the screen to display the actual value of these variables. Our final VGA display interface can be seen in Figure 5.
+
+<div>
+<center>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/intro_pic.jpg" width="500" height="150">
+<figcaption align="center"> Figure 5: Display of graphs on VGA </figcaption>
+</center>
+</div>
+
+&nbsp;&nbsp;&nbsp;&nbsp;After being able to plot the data on VGA, we start to transition more control to the HPS side. We first disabled the button control of the start, stop, and calibration signal, and adopted a pure software control. This requires a user interface that detects input from keyboard, and we were able to achieve it by using multiple pthreads. A user is able to choose a number between 1-3, and each corresponds to pressing reset, stop, or calibrate. When a stop is detected, the drawing will immediately stop and data display freezes, and a start resumes the drawing. Calibration, on the other hand, clears the energy and time data and starts them from 0 again. All graphs will clear and immediately start redrawing when calibration is selected. A demonstration of the effect of calibration is presented in the video below.
+
+<video width="600" height="400" controls>
+  <source src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/vid_demo.mp4" type="video/mp4">
+  <source src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/vid_demo.ogg" type="video/ogg">
+Your browser does not support the video tag.
+</video>
