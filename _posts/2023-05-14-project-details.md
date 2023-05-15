@@ -56,6 +56,8 @@ TO ADD:
 Your browser does not support the video tag.
 </video>
 
+<br/>
+
 ### Testing strategy
 
 &nbsp;&nbsp;&nbsp;&nbsp;To ensure all modules in our design work as expected, we took on a hierarchical approach to testing. At the lowest level, we first tested our I2C state machine by writing a testbench that feeds in control signal, clock, and data, and verified the output waveforms in ModelSim. As seen in Figure 4, the master is able to send out the correct address bits, generate ACKs when appropriate, read the input data and pull the data valid signal high when a 12-bit transaction completes.
@@ -72,27 +74,40 @@ Your browser does not support the video tag.
 &nbsp;&nbsp;&nbsp;&nbsp; At the end of the project, we moved from using power supply to directly measuring current drawn by the FPGA. We placed a 2.1mm female DC power jack on a breadboard and connect to it the FPGA power adapter. The power pin of the power jack is connected to the P+ pin of the mikroe-2987 board using a jumper wire, current will pass through the board and reach its P- pin, where we connected another jumper wire to the positive end of a male jack to open end power cable. The male power jack is inserted to the FPGA, whereas it negative end is connected back to the ground pin of the female power jack on the breadboard. This setup forms a series circuit where the current measured by the current sensor should be the same as the current drawn by the FPGA. Figures 5 and 6 show how we set up this series circuit. We observe the graphs and different readings on screen to see if the data makes sense. We observed fairly constant reading of current and power in this setting, which is expected because the FPGA is always running the same program. We also switched to using pure software control instead of buttons at this stage, and we compare the behavior of the VGA output when asserting signals in software to what was expected. We were able to see stopping of graphs when stop is selected and resume of drawing at start. Calibration also works correctly as graphs were erased and time axes reset properly, and the data display of current and energy goes back to 0.
 
 <div>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/post_background.jpg" width="250" height="50" align="left">
+<center>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/post_background.jpg" width="250" height="50" >
 <figcaption align="center"> Figure 5: Setup of circuit to directly measure current drawn by FPGA </figcaption>
+</center>
 </div>
+
+<br/>
 
 <div>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="60" height="130" align="right">
+<center>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="60" height="130" >
 <figcaption align="center"> Figure 6: A closer look at circuit around current sensor </figcaption>
+</center>
 </div>
 
+<br/> 
 
 ## Analysis
 &nbsp;&nbsp;&nbsp;&nbsp; Now that we can estimate the power consumed by the FPGA, we want to find out what are the factors that can influence the power consumption. Since lab 3 implementation already used up most of the hardware on the FPGA, it was not a good place to start. We tried integrating our power estimator code with our lab 2 code but some of the configuration on Qsys cannot be set properly, which caused the bottom half of the VGA display to malfunction. At the end, we decided to investigate the power consumption difference between using the ethernet cable to communicate with the FPGA and using serial. We first run the power estimator with the ethernet cable plugged in. The average power in this scenario is around 7.72W as shown in Figure 7. We then disconnect the ethernet cable and calibrate the readings by asserting the signal from the serial interface. The average power immediately drops down to 6.24W as shown in Figure 8. We repeated this process several times to confirm our finding, and we were always able to see a near 1W drop in average power every time we disconnect the ethernet cable. We did some research online and discovered that the ethernet port does take up a good chunk of power in operation. We are, therefore, able to conclude the use of ethernet connection in working with the FPGA increases power consumption significantly. We also tried adding two thousand 32-bit counters in the FPGA, but the change in power consumption was 
 
 <div>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/with_ether_power.jpg" width="200" height="70" align="left">
+<center>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/with_ether_power.jpg" width="200" height="70" >
 <figcaption align="center"> Figure 7: Readings with ethernet cable connected </figcaption>
+</center>
 </div>
 
+<br/>
+
 <div>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/without_ether_power.jpg" width="200" height="70" align="right">
+<center>
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/without_ether_power.jpg" width="200" height="70">
 <figcaption align="center"> Figure 8: Readings without ethernet cable connected </figcaption>
+</center>
 </div>
 
 ## Future development
