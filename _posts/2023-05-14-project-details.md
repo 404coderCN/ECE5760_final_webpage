@@ -2,6 +2,7 @@
 layout: post
 title: FPGA based power estimator
 featured-img: post_background
+summary: Implementation details of our power estimator project, including hardware, software design and testing
 mathjax: true
 ---
 
