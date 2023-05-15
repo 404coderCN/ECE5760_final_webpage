@@ -21,7 +21,7 @@ mathjax: true
 <figcaption align="center"> Figure 1: I2C protocol specified by MCP3221 </figcaption>
 </center>
 </div>
-
+<br/>
 
 &nbsp;&nbsp;&nbsp;&nbsp;Following the I2C protocol explained above, we developed an 11-state FSM in SystemVerilog which can be seen in Figure 2. In STATE_DATA_RECEIVED_UPPER and STATE_DATA_RECEIVED_LOWER, the master receives data from the slave and puts it in a shift register of 12-bits. At each negative clock edge in these two states, the respective counter will increment by 1 and state transition happens when the counter reaches 7. Because the SDA line can be controlled by both the master and the slave, we wrote a tri-state buffer to decide which device gets control of the line. The tri-state buffer comes with an enable signal that is HIGH when the master device acts as an input in the transaction, and SDA should become high impedance on the master side when this enable signal is asserted. Otherwise, SDA gets the output from master. The SCL clock line follows the input 200K clock signal whenever we're not sending start/stop condition, not waiting, or not in idle. A data valid signal is pulled HIGH when the master acknowledges the lower bits of data or when a NAK is asserted by the master. This signal will later be used to control our integrator in calculating accumulative energy.
 
@@ -47,6 +47,8 @@ TO ADD:
 <figcaption align="center"> Figure 3: Display of graphs on VGA </figcaption>
 </center>
 </div>
+
+<br/>
 
 &nbsp;&nbsp;&nbsp;&nbsp;After being able to plot the data on VGA, we start to transition more control to the HPS side. We first disabled the button control of the start, stop, and calibration signal, and adopted a pure software control. This requires a user interface that detects input from keyboard, and we were able to achieve it by using multiple pthreads. A user is able to choose a number between 1-3, and each corresponds to pressing reset, stop, or calibrate. When a stop is detected, the drawing will immediately stop and data display freezes, and a start resumes the drawing. Calibration, on the other hand, clears the energy and time data and starts them from 0 again. All graphs will clear and immediately start redrawing when calibration is selected. A demonstration of the effect of calibration is presented in the video below.
 
