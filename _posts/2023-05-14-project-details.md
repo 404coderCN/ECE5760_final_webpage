@@ -26,17 +26,17 @@ mathjax: true
 
 &nbsp;&nbsp;&nbsp;&nbsp;Following the I2C protocol explained above, we developed an 11-state FSM in SystemVerilog which can be seen in Figure 2. In STATE_DATA_RECEIVED_UPPER and STATE_DATA_RECEIVED_LOWER, the master receives data from the slave and puts it in a shift register of 12-bits. At each negative clock edge in these two states, the respective counter will increment by 1 and state transition happens when the counter reaches 7. Because the SDA line can be controlled by both the master and the slave, we wrote a tri-state buffer to decide which device gets control of the line. The tri-state buffer comes with an enable signal that is HIGH when the master device acts as an input in the transaction, and SDA should become high impedance on the master side when this enable signal is asserted. Otherwise, SDA gets the output from master. The SCL clock line follows the input 200K clock signal whenever we're not sending start/stop condition, not waiting, or not in idle. A data valid signal is pulled HIGH when the master acknowledges the lower bits of data or when a NAK is asserted by the master. This signal will later be used to control our integrator in calculating accumulative energy.
 
+&nbsp;&nbsp;&nbsp;&nbsp;From I2C receiver, we can obtain 12-bit data, however, we still need to convert it into actual current data which we set as 9.23 fixed-point data. The corresponding voltage can be computed as $data_out \over 2^{12} x 3.3V$. According to specification, sensitivity of current sensor is 110mv/A and original point for 1.65V, therefore, we can compute the actual current as $I = {V-1.65V} \over 100mV/A$.
+
 TO ADD:
 // FSM diagram
-// conversion of current reading
 // 5.22 fixed point representation
 
 &nbsp;&nbsp;&nbsp;&nbsp; The MCP3221 I2C interface also specified that the maximum clock speed it can achieve is 400kHz. This means the 50MHz FPGA clock will be too fast to run, so we added a clock divider to step it down to 200kHz. With the I2C interface figured out, we went on to implement an integrator that takes the current output, computes the unit energy consumption, and increments continuously by adding on the previous energy value. We added a stop signal to allow pausing of integration. Whenever stop is not asserted and data from the I2C interface is valid, we calculate the new unit energy by computing $V * I * dt$ and add it to the total energy consumed. The value of dt was determined by counting the number of pulses between two consecutive data valid signals using SignalTap. We counted 18 pulses, which matched the protocol (16 pulses for transmitting data and 2 pulses for ACK). This means our unit energy at every new sample of current is $V * I * {18} \over {200000}$. Despite the input current using a 5.22 fixed point value, the energy output of our integrator module was set to 9.23 fixed point, because energy is accumulative, and we need more bits in the integer part to prevent overflow. We also increment a counter every time the current becomes valid, and we will be able to determine the elapsed time since the FPGA starts running by computing (cycle_count - 1)*$18 \over 200000$. Here we disregard the time for the first transaction, i.e., we are not counting the first 27 cycles, because it includes time to transmit the address bits which is not representative of the transactions in between. Since our clock runs at a high frequency, these 27 cycles should be negligible, and we preserve enough precision for our time estimation.
 
 &nbsp;&nbsp;&nbsp;&nbsp; Towards the end of the project, we noticed that the energy output from our integrator module is not precise enough, and the average power is always a bit lower than exepcetd. To addess this problem we extended the energy output from the integrator module to be 64 bits, adding more fractional precision to the value. However, the Qsys PIO has a maximum bitwidth of 32 bits, so we had to create two PIO ports, one to transmit the higher 32 bit and one to transmit the lower 32 bit. We then used a long long type variable to store the 64 bit value in HPS, and later converted it from fixed point to double by a division of $2^{23}$. Doubling the number of bits improved the precision of the reading.
 
-TO ADD:
-// Sement decoder
+&nbsp;&nbsp;&nbsp;&nbsp;To make debugging more intuitive, we implemented a simple segment decoder on FPGA to display measured current value. As mentioned above, current value is 9.23 fixed point, we used segment displayer 0 as sign, next two as integer and resting as fraction part. We built a mapping table using first 9-bit as integer and 4-bit among 23-bit after decimal point.
 
 
 ### Software design
@@ -110,7 +110,7 @@ Your browser does not support the video tag.
 <div>
 <center>
 <img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/without_ether_power.jpg" width="200" height="70">
-<figcaption align="center"> Figure 8: Readings without ethernet cable connected </figcaption>
+<figcaption align="center"> Figure 8: Readings with ethernet cable disconnected </figcaption>
 </center>
 </div>
 
