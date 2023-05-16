@@ -8,15 +8,17 @@ mathjax: true
 
 ## Introduction
 
-&nbsp;&nbsp;&nbsp;&nbsp;Power consumption is a critical consideration of a lot of technologies today. Phone producers, for example, always talk about their improvement in power management and how it makes their battery last longer. The balance between functionality and power is an interesting topic investigated by many. When we are doing labs, however, we rarely think about how much power we are consuming, because we are never limited by it. When we synthesized the giant drum in lab 3 for this class, we exhausted all DSP blocks on the FPGA, and we used a lot of M10K memory. This kind of extensive use of hardware is likely to result in high power consumption, and we are curious to find out what are some of the factors that could impact the power consumption of an FPGA. With this goal in mind, we built a circuit that measures the current flowing through the power-supply cable using I2C-based current sensor [MIKROE-2987](https://www.mikroe.com/hall-current-2-click) while assuming a 12V stable voltage supply, and implemented an I2C receiver with integrator in the FPGA that continuously increments the energy consumed. Based on obtained data, we built an intuitive user interface on VGA showing current, real-time power, and average energy to monitor the power consumption of DE1-SoC.xxxxxxxx
+&nbsp;&nbsp;&nbsp;&nbsp;Power consumption is a critical consideration of a lot of technologies today. Phone producers, for example, always talk about their improvement in power management and how it makes their battery last longer. The balance between functionality and power is an interesting topic investigated by many. When we are doing labs, however, we rarely think about how much power we are consuming, because we are never limited by it. When we synthesized the giant drum in lab 3 for this class, we exhausted all DSP blocks on the FPGA, and we used a lot of M10K memory. This kind of extensive use of hardware is likely to result in high power consumption, and we are curious to find out what are some of the factors that could impact the power consumption of an FPGA. With this goal in mind, we built a circuit that measures the current flowing through the power-supply cable using I2C-based current sensor [MIKROE-2987](https://www.mikroe.com/hall-current-2-click) while assuming a stable 12V voltage supply, and implemented an I2C receiver with integrator in the FPGA that continuously increments the energy consumed. Based on obtained data, we built an intuitive user interface on VGA showing current, real-time power, and average energy to monitor the power consumption of DE1-SoC.
 
 ## Design & testing methods
 
-&nbsp;&nbsp;&nbsp;&nbsp;The overall design of our power estimator is shown in Figure 1.
+### Design Overview
+
+&nbsp;&nbsp;&nbsp;&nbsp;The overall design of our power estimator is shown in Figure 1. MIKOE-2987 uses hall effect to measure current through internally fused input pins and has extreme low series resistence around 1.2m $\Omega$ which will not effect current supplied to FPGA. This board uses I2C interface by SDA for data and SCL for clock to convey obatined current data. Based on specification, we built I2C master as receiver in FPGA to convert the bitstream to actual high-resolution current data and pass it to HPS with a valid signal. This master receiver is controlled by HPS to implement reset, start and stop. HPS will process the obatined data and display corresponding user interface on VGA. To accelerate debugging, we also implemented 7-segment displayer to display the measured current.
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/lab4_overall_design.jpg" width="135" height="35">
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/lab4_overall_design.jpg" width="80" height="20">
 <figcaption align="center"> Figure 1: Overall design of power estimator </figcaption>
 </center>
 </div>
@@ -28,7 +30,7 @@ mathjax: true
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/i2c_protocol.png" width="400" height="70">
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/i2c_protocol.png" width="80" height="100">
 <figcaption align="center"> Figure 2: I2C protocol specified by MCP3221 </figcaption>
 </center>
 </div>
