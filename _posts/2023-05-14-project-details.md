@@ -96,7 +96,7 @@ Your browser does not support the video tag.
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/post_background.jpg" width="250" height="50" >
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/post_background.jpg" width="220" height="35" >
 <figcaption align="center"> Figure 6: Setup of circuit to directly measure current drawn by FPGA </figcaption>
 </center>
 </div>
@@ -105,7 +105,7 @@ Your browser does not support the video tag.
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="60" height="100" >
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="30" height="70" >
 <figcaption align="center"> Figure 7: A closer look at circuit around current sensor </figcaption>
 </center>
 </div>
@@ -131,15 +131,24 @@ Your browser does not support the video tag.
 </center>
 </div>
 
-## Future development
-&nbsp;&nbsp;&nbsp;&nbsp;Unfortunately, with the limitation of time, we were not able to carry out more investigations, but we believe there is plenty of potential for further testing and improvement. The most direct one is to use this estimator to estimate power consumption of labs we did this semester. For example, lab 3 implementation already used up most of the hardware on the FPGA, we expected more energy and power will be consumed. Also, for example, experiment with adding and removing the VGA and audio subsystem and observing how that affects power consumption can be quite interesting. However, this system also has several flaws. We always consider supply volatge as stable is too ideal, there will be inevitable fluctuating in voltage while operating. To further estimate power, we suggest to use internal ADC in DE1 SoC to measure the supply volatge instead simply considering it as 12V. Additionally, 110mV/A sensitivity might not be high enough, we recommended [MIKROE-3443](https://www.mikroe.com/hall-current-6-click) which is also a I2C-based current sensor but with 400mV/A sensitivity.
+## Conclusion and future development
+&nbsp;&nbsp;&nbsp;&nbsp;By the end of this project, we were able build the power estimator close to what we planned at the start. This piece of hardware can act as a standalone ammeter and power estimator, and it may as well be integrated into other projects to help people learn about the power consumption and efficiency of their own system. For most of the labs, we focused on building accelerators for fast computations and synthesis, and while better performance is always preferred, we thought it would be very meaningful to study the corresponding cost in power. Unfortunately, with the limitation of time, we were not able to carry out more investigations, but we believe there is plenty of potential for further testing and improvement. The most direct one is to use this estimator to estimate power consumption of labs we did this semester. For example, lab 3 implementation already used up most of the hardware on the FPGA, we expected more energy and power will be consumed. Also, for example, experiment with adding and removing the VGA and audio subsystem and observing how that affects power consumption can be quite interesting. However, this system also has several flaws. We always consider supply voltage as stable, which is too ideal. There will be inevitable fluctuating in voltage while operating. To further estimate power, we suggest using the internal ADC on DE1 SoC to measure the supply voltage instead of simply assuming it as 12V. Additionally, 110mV/A sensitivity might not be precise enough, we recommended [MIKROE-3443](https://www.mikroe.com/hall-current-6-click) which is also an I2C-based current sensor but with 400mV/A sensitivity.
 
+&nbsp;&nbsp;&nbsp;&nbsp; We referenced the C code example on the ECE5760 course website for assigning addresses to pointers for PIO ports and mapping from physical to virtual address. We also adopted the Quartus project code from the website and instantiated our own modules inside. All datasheets and schematics referenced in this project are public information on internet and is meant for sharing with the general public.  
+ 
+
+## Final demo video
+
+[![Final demo video](https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/video_banner.jpg)](https://www.youtube.com/watch?v=2ISn8jLiJNo&list=PLDqMkB5cbBA7nUwrxsLgtrOsce9UgJXJb&index=1)
 
 ## Appendix A
 The group approves this report for inclusion on the course website.
 The group approves the video for inclusion on the course youtube channel.
 
 ## References
+
+[**Mikroe-2987 Vendor Website**](https://www.mikroe.com/hall-current-2-click)
+
 [**MCP3221 ADC Datasheet**](https://www.digikey.com/htmldatasheets/production/48559/0/0/1/mcp3221.html?utm_adgroup=Integrated%20Circuits&utm_source=google&utm_medium=cpc&utm_campaign=Dynamic%20Search_EN_Product&utm_term=&utm_content=Integrated%20Circuits&gclid=CjwKCAjwjYKjBhB5EiwAiFdSfp9ML477NVziVD5azNRU4RDcGAhePigK16BnE5FcO95hGj4eKhzXJRoCMEwQAvD_BwE)
 
 [**DE1-SoC User Manual**](https://people.ece.cornell.edu/land/courses/ece5760/DE1_SOC/DE1-SoC_User_manualv.1.2.2_revE.pdf)
