@@ -108,7 +108,7 @@ Your browser does not support the video tag.
 <img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="10" height="30" >
 <figcaption align="center"> Figure 7: A closer look at circuit around current sensor </figcaption>
 </center>
-</div>git
+</div>
 
 <br/> 
 
