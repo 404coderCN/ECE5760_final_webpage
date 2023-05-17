@@ -105,7 +105,7 @@ Your browser does not support the video tag.
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="20" height="50" >
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/closer_look_ammeter.jpg" width="10" height="30" >
 <figcaption align="center"> Figure 7: A closer look at circuit around current sensor </figcaption>
 </center>
 </div>git
@@ -117,7 +117,7 @@ Your browser does not support the video tag.
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/with_ether_power.jpg" width="200" height="70" >
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/with_ether_power.jpg" width="170" height="60" >
 <figcaption align="center"> Figure 8: Readings with ethernet cable connected </figcaption>
 </center>
 </div>
@@ -126,7 +126,7 @@ Your browser does not support the video tag.
 
 <div>
 <center>
-<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/without_ether_power.jpg" width="200" height="70">
+<img src="https://404codercn.github.io/ece5760_final_webpage//assets/img/posts/without_ether_power.jpg" width="170" height="60">
 <figcaption align="center"> Figure 9: Readings with ethernet cable disconnected </figcaption>
 </center>
 </div>
